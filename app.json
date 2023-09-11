@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "web": {
+      "bundler": "metro"
+    },
+    "splash": {
+      "image": "./assets/Splash.png",
+      "resizeMode": "cover",
+      "backgroundColor":"#ffffff0f"
+    },
+    
+    "plugins": [
+      "expo-router"
+    ],
+    "name": "practice",
+    "slug": "practice"
+  }
+}
