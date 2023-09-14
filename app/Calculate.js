@@ -13,17 +13,20 @@ import React from "react";
 import { Picker } from "@react-native-picker/picker";
 import { useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ResultsProvider } from "./resultContext/resultContext";
 
 const Calculate = () => {
+  
+  
   const [fields, setFields] = useState([
     { module: "", grade: "", credits: "" },
   ]);
 
-  const [result, setResult] = useState("");
-  const [credits, setCredits] = useState("");
+  const [result, setResult] = useState(0);
+  const [credits, setCredits] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [pass, setPass] = useState("");
-  const [index, setIndex] = useState("")
+  const [index, setIndex] = useState(0);
 
   const router = useRouter();
 
@@ -38,6 +41,8 @@ const Calculate = () => {
     setFields(newCourses);
     setIndex(index + 1)
   };
+
+
 
   const handleDeleteCourse = () => {
     setFields(fields.slice(0, -1));
@@ -121,109 +126,112 @@ const Calculate = () => {
   // }
   // ,[result])
   return (
-    <View className="flex-1 justify-center items-center">
-      <SafeAreaView>
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          className="mt-20 bg-white "
-          showsVerticalScrollIndicator={false}
-        >
-          <View className="">
-            {fields.map((fields, index) => (
-              <View key={index} className="flex-row ml-8">
-                <View className="border border-gray-400 mt-2 rounded-lg">
-                  <TextInput
-                    className="ml-2"
-                    value={fields.module}
-                    onChangeText={(text) =>
-                      handleCourseChange(index, "module", text)
-                    }
-                    placeholder="Module name"
-                  />
-                  <View className="flex-row">
-                    <View className="w-40 mt-2 border-t border-r  border-gray-400">
-                      {/* <Text>Grade:</Text> */}
+    <ResultsProvider>
+      <View className="flex-1 justify-center items-center">
+        <SafeAreaView>
+          <ScrollView
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            className="mt-20 bg-white "
+            showsVerticalScrollIndicator={false}
+          >
+            <View className="">
+              {fields.map((fields, index) => (
+                <View key={index} className="flex-row ml-8">
+                  <View className="border border-gray-400 mt-2 rounded-lg">
+                    <TextInput
+                      className="ml-2"
+                      value={fields.module}
+                      onChangeText={(text) =>
+                        handleCourseChange(index, "module", text)
+                      }
+                      placeholder="Module name"
+                    />
+                    <View className="flex-row">
+                      <View className="w-40 mt-2 border-t border-r  border-gray-400">
+                        {/* <Text>Grade:</Text> */}
 
-                      <Picker
-                        enabled={true}
-                        mode="dialog"
-                        prompt=""
-                        testID="examplePicker"
-                        accessibilityLabel="Example Picker"
-                        itemStyle={{ color: "blue", fontSize: 20 }}
-                        selectedValue={fields.grade}
-                        onValueChange={(value) =>
-                          handleCourseChange(index, "grade", value)
-                        }
-                      >
-                        <Picker.Item label="Grade" value="" />
-                        <Picker.Item label="A+" value="A+" />
-                        <Picker.Item label="A" value="A" />
-                        <Picker.Item label="A-" value="A-" />
-                        <Picker.Item label="B+" value="B+" />
-                        <Picker.Item label="B" value="B" />
-                        <Picker.Item label="B-" value="B-" />
-                        <Picker.Item label="C+" value="C+" />
-                        <Picker.Item label="C" value="C" />
-                        <Picker.Item label="C-" value="C-" />
-                        <Picker.Item label="D" value="D" />
-                        <Picker.Item label="E" value="E" />
-                        <Picker.Item label="F" value="F" />
-                      </Picker>
-                    </View>
+                        <Picker
+                          enabled={true}
+                          mode="dialog"
+                          prompt=""
+                          testID="examplePicker"
+                          accessibilityLabel="Example Picker"
+                          itemStyle={{ color: "blue", fontSize: 20 }}
+                          selectedValue={fields.grade}
+                          onValueChange={(value) =>
+                            handleCourseChange(index, "grade", value)
+                          }
+                        >
+                          <Picker.Item label="Grade" value="" />
+                          <Picker.Item label="A+" value="A+" />
+                          <Picker.Item label="A" value="A" />
+                          <Picker.Item label="A-" value="A-" />
+                          <Picker.Item label="B+" value="B+" />
+                          <Picker.Item label="B" value="B" />
+                          <Picker.Item label="B-" value="B-" />
+                          <Picker.Item label="C+" value="C+" />
+                          <Picker.Item label="C" value="C" />
+                          <Picker.Item label="C-" value="C-" />
+                          <Picker.Item label="D" value="D" />
+                          <Picker.Item label="E" value="E" />
+                          <Picker.Item label="F" value="F" />
+                        </Picker>
+                      </View>
 
-                    <View className="w-32 mt-2 border-t h-8 border-gray-400">
-                      {/* <Text>Credit Hours:</Text> */}
-                      <Picker
-                        enabled={true}
-                        mode="dialog"
-                        selectedValue={fields.credits.toString()}
-                        onValueChange={(value) => {
-                          const newCredits = value !== "" ? parseInt(value) : 0;
-                          handleCourseChange(index, "credits", newCredits);
-                        }}
-                      >
-                        <Picker.Item label="Credit" value="" />
-                        <Picker.Item label="1" value="1" />
-                        <Picker.Item label="2" value="2" />
-                        <Picker.Item label="3" value="3" />
-                      </Picker>
+                      <View className="w-32 mt-2 border-t h-8 border-gray-400">
+                        {/* <Text>Credit Hours:</Text> */}
+                        <Picker
+                          enabled={true}
+                          mode="dialog"
+                          selectedValue={fields.credits.toString()}
+                          onValueChange={(value) => {
+                            const newCredits =
+                              value !== "" ? parseInt(value) : 0;
+                            handleCourseChange(index, "credits", newCredits);
+                          }}
+                        >
+                          <Picker.Item label="Credit" value="" />
+                          <Picker.Item label="1" value="1" />
+                          <Picker.Item label="2" value="2" />
+                          <Picker.Item label="3" value="3" />
+                        </Picker>
+                      </View>
                     </View>
                   </View>
+                  <Pressable onPress={handleDeleteCourse}>
+                    <View className="">
+                      <View className="mt-12 ml-2">
+                        <MaterialIcons name="delete" size={24} color="red" />
+                      </View>
+                    </View>
+                  </Pressable>
                 </View>
-                <Pressable onPress={handleDeleteCourse}>
-                  <View className="">
-                    <View className="mt-12 ml-2">
-                      <MaterialIcons name="delete" size={24} color="red" />
+              ))}
+              <View>
+                <Pressable onPress={addFields}>
+                  <View className="items-center mt-5">
+                    <View className="justify-center mb-5  w-72 h-7 border items-center border-dashed animate-bounce">
+                      <Text className="font-semibold">Add Class</Text>
                     </View>
                   </View>
                 </Pressable>
               </View>
-            ))}
-            <View>
-              <Pressable onPress={addFields}>
-                <View className="items-center mt-5">
-                  <View className="justify-center mb-5  w-72 h-7 border items-center border-dashed animate-bounce">
-                    <Text className="font-semibold">Add Class</Text>
-                  </View>
-                </View>
-              </Pressable>
             </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-      <View className="mb-24 mt-5">
-        <Pressable onPress={goToResult}>
-          <View className="items-center h-8 ">
-            <View className="mb-5 bg-blue-500 rounded-lg h-8 items-center justify-center w-60">
-              <Text className="text-white font-bold">Calculate</Text>
+          </ScrollView>
+        </SafeAreaView>
+        <View className="mb-24 mt-5">
+          <Pressable onPress={goToResult}>
+            <View className="items-center h-8 ">
+              <View className="mb-5 bg-blue-500 rounded-lg h-8 items-center justify-center w-60">
+                <Text className="text-white font-bold">Calculate</Text>
+              </View>
             </View>
-          </View>
-        </Pressable>
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </ResultsProvider>
   );
 };
 

@@ -3,10 +3,11 @@ import * as Progress from "react-native-progress";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
+import { fetchResults } from "./database/resultModels";
 
 const ViewDetails = () => {
   const params = useLocalSearchParams();
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState(0);
   const [credits, setTotal] = useState(null);
   const [index, setIndex] = useState(null);
 
