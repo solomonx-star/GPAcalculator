@@ -1,5 +1,11 @@
 import { Stack } from "expo-router";
 // import { Drawer } from "expo-router/drawer";
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
+
 
 export default function Layout() {
   return (
@@ -35,6 +41,10 @@ export default function Layout() {
           title: "History",
         }}
       />
+      <Stack.Screen
+        name="Outcome"
+        options={{}}
+        />
     </Stack>
   );
 }

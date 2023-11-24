@@ -1,13 +1,25 @@
-import { View, Text, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import * as Progress from "react-native-progress";
-import { Circle } from "react-native-svg";
-import CircleProgressBar from "../components/progressMarker/CircleProgressBar";
-import CircleProgressBar2 from "../components/progressMarker/CircleProgressBar2";
-import { Link } from "expo-router";
-import { useRouter } from "expo-router";
-import { insertResult } from "../components/database/resultModels";
+// import * as Progress from "react-native-progress";
+// import { Circle } from "react-native-svg";
+import CircleProgressBar from "./progressMarker/CircleProgressBar";
+import CircleProgressBar2 from "./progressMarker/CircleProgressBar2";
+// import { Link } from "expo-router";
+// import { useRouter } from "expo-router";
+import { insertResult } from "./database/resultModels";
+
+
+
+
+
 
 const Result = () => {
   const params = useLocalSearchParams();
@@ -15,6 +27,9 @@ const Result = () => {
   const [credits, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
   const [savedResults, setSavedResults] = useState();
+  // const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [isVisible, setIsVisible] = useState(false);
+  const [semester, setSemester] = useState('')
 
   const percentage = ((result / 5) * 100).toFixed(1);
   // const Gpa = result / 5;
@@ -23,46 +38,32 @@ const Result = () => {
     setResult(params.result);
     setTotal(params.credits);
     setIndex(params.index);
+    setSemester(params.semester);
   }, [params]);
 
   const saveResultToDB = async () => {
-    try {
-      await insertResult(result);
-      alert("Result saved!");
-    } catch (err) {
-      console.error(err);
-      alert("Error saving result!");
-    }
+    setIsVisible(false);
+   try {
+     await insertResult(result, semester);
+     alert("Result saved!");
+   } catch (err) {
+     console.error(err);
+     alert("Error saving result!");
+   }
   };
-
-  const saveResult = () => {
-    const newResult = {
-      id: Date.now(), // using timestamp as a unique identifier
-      result: result,
-    };
-
-    setSavedResults((prev) => [...prev, newResult]);
-    saveResultToDB();
-  };
-
+  
   // const saveResult = () => {
   //   const newResult = {
-  //     id: Math.random().toString(),
+  //     id: Date.now(), // using timestamp as a unique identifier
   //     result: result,
   //   };
 
   //   setSavedResults((prev) => [...prev, newResult]);
-  //   alert("Result saved!");
+  //   saveResultToDB();
   // };
 
-  // const router = useRouter();
 
-  // useEffect(() => {
-  //   router.push({
-  //     pathname: "/ViewDetails",
-  //     params: { result },
-  //   });
-  // }, [result]);
+  
 
   return (
     <View className="">
@@ -97,11 +98,42 @@ const Result = () => {
       <View className="items-center justify-center mt-24">
         <Pressable
           className="bg-blue-500 w-1/2 h-10 justify-center rounded-lg"
-          onPress={saveResultToDB}
+          onPress={() => setIsVisible(!isVisible)}
         >
           <Text className="text-center text-white">Save Result</Text>
         </Pressable>
       </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        // presentationStyle="formSheet"
+        visible={isVisible}
+        onRequestClose={() => {
+          setModalVisible(!isVisible);
+        }}
+      >
+        <View
+          style={{ backgroundColor: "rgba(52,52,52,0.8)" }}
+          className="flex-1 justify-center items-center "
+        >
+          <View className="bg-white  w-[350px] h-[200px] items-center justify-center space-y-[21px]">
+            <Text>Enter Semester below</Text>
+            <View className="border w-[200px] h-[30px] justify-center">
+              <TextInput
+                onChangeText={setSemester}
+                value={semester}
+                placeholder="Semester"
+                className="ml-3"
+              />
+            </View>
+            <View>
+              <TouchableOpacity onPress={saveResultToDB}>
+                <Text>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

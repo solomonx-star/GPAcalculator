@@ -4,10 +4,9 @@ import { fetchResults, deleteResult } from "./database/resultModels";
 import { Link } from "expo-router";
 
 const HistoryScreen = () => {
-  
   const [savedResults, setSavedResults] = useState([]);
+  // const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
-  
   useEffect(() => {
     const fetchDbResults = async () => {
       try {
@@ -21,12 +20,17 @@ const HistoryScreen = () => {
       console.log("Fetched Results:", results); // This will log the fetched results
       setSavedResults(results);
     };
-    
 
     fetchDbResults();
   }, []);
 
-  
+  // useEffect(() => {
+  //   // const interval = setInterval(() => {
+  //     setCurrentDateTime(new Date());
+  //   // }, 1000);
+
+  //   // return () => clearInterval(interval);
+  // }, []);
 
   const handleDeleteResult = async (id) => {
     try {
@@ -41,12 +45,19 @@ const HistoryScreen = () => {
 
   // Render each item of the saved results list
   const renderItem = ({ item }) => (
-    <View className="flex-row justify-between p-10 border-b-2 border-white">
-      <Text className="text-lg">GPA: {item.result}</Text>
-      <Text>Module:{item.module}</Text>
-      <Pressable onPress={() => handleDeleteResult(item.id)}>
-        <Text className="text-blue-500">Delete</Text>
-      </Pressable>
+    <View className="p-5 border-b-2 border-t-2 border-white">
+      <View>
+        <Text className="mt-1">{item.semester}</Text>
+        <Text>{item.timestamp}</Text>
+        <Text>{item.index}</Text>
+      </View>
+      <View className="flex-row mt-4 space-x-20">
+        {/* <Text className="text-lg">GPA: {item.result}</Text> */}
+
+        <Pressable onPress={() => handleDeleteResult(item.id)} className="mt-1">
+          <Text className="text-blue-500">Delete</Text>
+        </Pressable>
+      </View>
     </View>
   );
 
@@ -55,16 +66,17 @@ const HistoryScreen = () => {
       <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 20 }}>
         Saved Results
       </Text>
+      {/* <Text>{currentDateTime.toLocaleString()}</Text> */}
 
       <FlatList
         showsVerticalScrollIndicator={false}
         data={savedResults}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
+        className=""
       />
     </View>
   );
 };
-
 
 export default HistoryScreen;
