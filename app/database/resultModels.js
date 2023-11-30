@@ -25,7 +25,7 @@ const createTable = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS results (id INTEGER PRIMARY KEY NOT NULL, result REAL, grade TEXT, semester TEXT, timestamp TEXT);",
+        "CREATE TABLE IF NOT EXISTS results (id INTEGER PRIMARY KEY NOT NULL, result REAL, grade TEXT, semester TEXT, `index` INTEGER, timestamp TEXT);",
         [],
         () => {
           resolve();
@@ -71,12 +71,13 @@ export const insertResult = (resultValue, semesterValue, gradeValue, indexValue)
   ];
   const monthName = months[now.getMonth()];
   const timestamp = `${monthName} ${now.getDate()}, ${now.getFullYear()}`;
+  
 
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        "INSERT INTO results (result, semester, grade, timestamp) VALUES (?,?,?,?);",
-        [resultValue, semesterValue, gradeValue, timestamp],
+        "INSERT INTO results (result, semester, grade, `index`, timestamp) VALUES (?,?,?,?,?);",
+        [resultValue, semesterValue, gradeValue, indexValue, timestamp],
         (_, resultSet) => {
           resolve(resultSet);
         },
@@ -137,7 +138,7 @@ insertResult(
     console.error("Error inserting data:", err);
   });
 
-  insertResult("someResultValue", "someGradeValue", "someSemesterValue")
+  insertResult("someResultValue", "someGradeValue", "someSemesterValue", "someIndexValue")
     .then((moduleSet) => {
       console.log("Data inserted successfully:", moduleSet);
     })

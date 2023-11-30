@@ -22,30 +22,12 @@ const Home = () => {
         {/* <Link href="/Calculate" asChild> */}
         <Pressable
           onPress={() => router.push('Calculate')}
-          className="w-52 h-10 bg-blue-500 justify-center rounded-lg shadow-2xl"
+          className="w-52 h-10 bg-blue-500 justify-center rounded-lg shadow-lg"
         >
           <Text className="text-white text-center">Calculate</Text>
         </Pressable>
-        {/* </Link> */}
-        {/* <Modal
-          animationType="slide"
-          presentationStyle="formSheet"
-          transparent={false}
-          visible={showModal}
-          onRequestClose={() => {
-            setshowModal(!showModal);
-          }}
-          className="flex-1 justify-center items-center bg-black"
-        >
-          <Choice
-            type={() => {
-              router.push("Calculate");
-              setshowModal(!showModal);
-            }}
-          />
-        </Modal> */}
         <Link href="/History" className="mt-5" asChild>
-          <Pressable className="w-52 h-10 bg-blue-500 justify-center rounded-lg shadow-2xl">
+          <Pressable className="w-52 h-10 bg-blue-500 justify-center rounded-lg shadow-lg">
             <Text className="text-center text-white">View History</Text>
           </Pressable>
         </Link>

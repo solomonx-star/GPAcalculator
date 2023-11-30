@@ -1,36 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Pressable } from "react-native";
+import { View, Text, FlatList, Pressable, Alert } from "react-native";
 import { fetchResults, deleteResult } from "./database/resultModels";
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams, router } from "expo-router";
+import { Modal, TouchableOpacity } from "react-native-web";
 
 const HistoryScreen = () => {
   const [savedResults, setSavedResults] = useState([]);
-  // const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const params = useLocalSearchParams();
+
 
   useEffect(() => {
     const fetchDbResults = async () => {
       try {
         const results = await fetchResults();
         setSavedResults(results);
+        console.log("fetched open");
       } catch (err) {
         console.error(err);
         alert("Error fetching results!");
       }
-      const results = await fetchResults();
-      console.log("Fetched Results:", results); // This will log the fetched results
-      setSavedResults(results);
+      // const results = await fetchResults();
+      // console.log("Fetched Results:", results); // This will log the fetched results
+      // setSavedResults(results);
     };
 
     fetchDbResults();
   }, []);
 
-  // useEffect(() => {
-  //   // const interval = setInterval(() => {
-  //     setCurrentDateTime(new Date());
-  //   // }, 1000);
+  const createTwoButtonAlert = (id) =>
+    Alert.alert("Delete Result", "Are you sure you want to delete this result?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => handleDeleteResult(id)},
+    ]);
 
-  //   // return () => clearInterval(interval);
-  // }, []);
 
   const handleDeleteResult = async (id) => {
     try {
@@ -45,20 +51,26 @@ const HistoryScreen = () => {
 
   // Render each item of the saved results list
   const renderItem = ({ item }) => (
-    <View className="p-5 border-b-2 border-t-2 border-white">
-      <View>
-        <Text className="mt-1">{item.semester}</Text>
-        <Text>{item.timestamp}</Text>
-        <Text>{item.index}</Text>
-      </View>
-      <View className="flex-row mt-4 space-x-20">
-        {/* <Text className="text-lg">GPA: {item.result}</Text> */}
+    <Link
+      href={`/Outcome?result=${item.result.toFixed(2)}&credits=${
+        item.credits
+      }&index=${item.index}`}
+    >
+      <View className="p-5 border-b-2 border-t-2 border-white">
+        <View>
+          <Text className="mt-1">{item.semester}</Text>
+          <Text>{item.timestamp}</Text>
+        </View>
 
-        <Pressable onPress={() => handleDeleteResult(item.id)} className="mt-1">
-          <Text className="text-blue-500">Delete</Text>
-        </Pressable>
+        <View className="flex-row mt-4 space-x-20">
+          {/* <Text className="text-lg">GPA: {item.result}</Text> */}
+
+          <Pressable onPress={() => createTwoButtonAlert(item.id)} className="mt-1">
+            <Text className="text-blue-500">Delete</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </Link>
   );
 
   return (
@@ -67,6 +79,7 @@ const HistoryScreen = () => {
         Saved Results
       </Text>
       {/* <Text>{currentDateTime.toLocaleString()}</Text> */}
+      {/* <Pressable onPress={handleView}> */}
 
       <FlatList
         showsVerticalScrollIndicator={false}

@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import * as Progress from "react-native-progress";
 import { Circle } from "react-native-svg";
@@ -14,7 +14,7 @@ const Result = () => {
   const [result, setResult] = useState(0);
   const [credits, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
-  const [savedResults, setSavedResults] = useState();
+  // const [savedResults, setSavedResults] = useState();
 
   const percentage = ((result / 5) * 100).toFixed(1);
   // const Gpa = result / 5;
@@ -35,15 +35,15 @@ const Result = () => {
     }
   };
 
-  const saveResult = () => {
-    const newResult = {
-      id: Date.now(), // using timestamp as a unique identifier
-      result: result,
-    };
+  // const saveResult = () => {
+  //   const newResult = {
+  //     id: Date.now(), // using timestamp as a unique identifier
+  //     result: result,
+  //   };
 
-    setSavedResults((prev) => [...prev, newResult]);
-    saveResultToDB();
-  };
+  //   setSavedResults((prev) => [...prev, newResult]);
+  //   saveResultToDB();
+  // };
 
   // const saveResult = () => {
   //   const newResult = {
@@ -94,14 +94,14 @@ const Result = () => {
         {/* <Text>Your grade percentage is {((result / 5) * 100).toFixed(1)}%</Text> */}
         <CircleProgressBar progress={percentage} />
       </View>
-      <View className="items-center justify-center mt-24">
+      {/* <View className="items-center justify-center mt-24">
         <Pressable
           className="bg-blue-500 w-1/2 h-10 justify-center rounded-lg"
           onPress={saveResultToDB}
         >
           <Text className="text-center text-white">Save Result</Text>
         </Pressable>
-      </View>
+      </View> */}
     </View>
   );
 };

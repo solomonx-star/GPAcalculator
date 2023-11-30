@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useSearchParams } from "expo-router";
 // import * as Progress from "react-native-progress";
 // import { Circle } from "react-native-svg";
 import CircleProgressBar from "./progressMarker/CircleProgressBar";
@@ -23,6 +23,7 @@ import { insertResult } from "./database/resultModels";
 
 const Result = () => {
   const params = useLocalSearchParams();
+  // const [searchParams] = useSearchParams();
   const [result, setResult] = useState(0);
   const [credits, setTotal] = useState(0);
   const [index, setIndex] = useState(0);
@@ -41,10 +42,13 @@ const Result = () => {
     setSemester(params.semester);
   }, [params]);
 
+
+  
+
   const saveResultToDB = async () => {
     setIsVisible(false);
    try {
-     await insertResult(result, semester);
+     await insertResult(result, semester, index);
      alert("Result saved!");
    } catch (err) {
      console.error(err);
@@ -52,15 +56,6 @@ const Result = () => {
    }
   };
   
-  // const saveResult = () => {
-  //   const newResult = {
-  //     id: Date.now(), // using timestamp as a unique identifier
-  //     result: result,
-  //   };
-
-  //   setSavedResults((prev) => [...prev, newResult]);
-  //   saveResultToDB();
-  // };
 
 
   
@@ -95,7 +90,7 @@ const Result = () => {
         {/* <Text>Your grade percentage is {((result / 5) * 100).toFixed(1)}%</Text> */}
         <CircleProgressBar progress={percentage} />
       </View>
-      <View className="items-center justify-center mt-24">
+      <View className="items-center justify-center mt-4 h-[15%]">
         <Pressable
           className="bg-blue-500 w-1/2 h-10 justify-center rounded-lg"
           onPress={() => setIsVisible(!isVisible)}
@@ -118,7 +113,7 @@ const Result = () => {
         >
           <View className="bg-white  w-[350px] h-[200px] items-center justify-center space-y-[21px]">
             <Text>Enter Semester below</Text>
-            <View className="border w-[200px] h-[30px] justify-center">
+            <View className="border w-[200px] h-[30px] rounded-[10px] justify-center">
               <TextInput
                 onChangeText={setSemester}
                 value={semester}
@@ -126,8 +121,8 @@ const Result = () => {
                 className="ml-3"
               />
             </View>
-            <View>
-              <TouchableOpacity onPress={saveResultToDB}>
+            <View className="">
+              <TouchableOpacity className="bg-blue-500 w-[80px] rounded h-[30px] mt-3 justify-center items-center" onPress={saveResultToDB}>
                 <Text>Save</Text>
               </TouchableOpacity>
             </View>

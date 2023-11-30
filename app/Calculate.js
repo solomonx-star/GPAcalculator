@@ -72,6 +72,25 @@ const Calculate = () => {
     }
   }, [result]);
 
+  
+
+
+  // useEffect(() => {
+  //   if (result) {
+  //     router.push({
+  //       pathname: "/Result",
+  //       params: { result, credits, index },
+  //     });
+  //   }
+  // }, [result]);
+
+  // useEffect(() => {
+  //   router.push({
+  //     pathname: "/Result",
+  //     params: { result, credits, index }
+  //   })
+  // }, [result]);
+
   const calculateGPA = () => {
     let total = 0;
     let credit = 0;
